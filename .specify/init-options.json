@@ -2,6 +2,8 @@
   "ai": "copilot",
   "ai_skills": true,
   "feature_numbering": "sequential",
+  "spec_numbering": "issue",
+  "spec_number_width": 4,
   "here": true,
   "integration": "copilot",
   "script": "sh",

@@ -7,6 +7,7 @@ DRY_RUN=false
 ALLOW_EXISTING=false
 SHORT_NAME=""
 BRANCH_NUMBER=""
+ISSUE_NUMBER=""
 USE_TIMESTAMP=false
 ARGS=()
 i=1
@@ -49,24 +50,45 @@ while [ $i -le $# ]; do
             fi
             BRANCH_NUMBER="$next_arg"
             ;;
+        --issue)
+            if [ $((i + 1)) -gt $# ]; then
+                echo 'Error: --issue requires a value' >&2
+                exit 1
+            fi
+            i=$((i + 1))
+            next_arg="${!i}"
+            if [[ "$next_arg" == --* ]]; then
+                echo 'Error: --issue requires a value' >&2
+                exit 1
+            fi
+            # Accept an optional leading '#', then require digits only
+            next_arg="${next_arg#\#}"
+            if ! [[ "$next_arg" =~ ^[0-9]+$ ]]; then
+                echo 'Error: --issue requires a numeric GitHub issue number' >&2
+                exit 1
+            fi
+            ISSUE_NUMBER="$next_arg"
+            ;;
         --timestamp)
             USE_TIMESTAMP=true
             ;;
         --help|-h)
-            echo "Usage: $0 [--json] [--dry-run] [--allow-existing-branch] [--short-name <name>] [--number N] [--timestamp] <feature_description>"
+            echo "Usage: $0 [--json] [--dry-run] [--allow-existing-branch] [--short-name <name>] [--number N] [--issue N] [--timestamp] <feature_description>"
             echo ""
             echo "Options:"
             echo "  --json              Output in JSON format"
             echo "  --dry-run           Compute feature name and paths without creating directories or files"
             echo "  --allow-existing-branch  Reuse an existing feature directory if it already exists"
             echo "  --short-name <name> Provide a custom short name (2-4 words) for the feature"
-            echo "  --number N          Specify branch number manually (overrides auto-detection)"
+            echo "  --number N          Specify spec number manually (overrides auto-detection)"
+            echo "  --issue N           Align the spec number to an existing GitHub issue number (consume only; overrides --number)"
             echo "  --timestamp         Use timestamp prefix (YYYYMMDD-HHMMSS) instead of sequential numbering"
             echo "  --help, -h          Show this help message"
             echo ""
             echo "Examples:"
             echo "  $0 'Add user authentication system' --short-name 'user-auth'"
             echo "  $0 'Implement OAuth2 integration for API' --number 5"
+            echo "  $0 'Fix login redirect' --issue 42 --short-name 'fix-login'"
             echo "  $0 --timestamp --short-name 'user-auth' 'Add user authentication'"
             exit 0
             ;;
@@ -191,9 +213,22 @@ else
     BRANCH_SUFFIX=$(generate_branch_name "$FEATURE_DESCRIPTION")
 fi
 
-# Warn if --number and --timestamp are both specified
+# An explicit --issue number aligns the spec number to a GitHub issue and takes
+# precedence over --number (consume only: the issue must already exist).
+if [ -n "$ISSUE_NUMBER" ]; then
+    if [ -n "$BRANCH_NUMBER" ] && [ "$BRANCH_NUMBER" != "$ISSUE_NUMBER" ]; then
+        >&2 echo "[specify] Warning: --number is ignored when --issue is used"
+    fi
+    BRANCH_NUMBER="$ISSUE_NUMBER"
+fi
+
+# Warn if --number/--issue and --timestamp are both specified
 if [ "$USE_TIMESTAMP" = true ] && [ -n "$BRANCH_NUMBER" ]; then
-    >&2 echo "[specify] Warning: --number is ignored when --timestamp is used"
+    if [ -n "$ISSUE_NUMBER" ]; then
+        >&2 echo "[specify] Warning: --issue is ignored when --timestamp is used"
+    else
+        >&2 echo "[specify] Warning: --number is ignored when --timestamp is used"
+    fi
     BRANCH_NUMBER=""
 fi
 
@@ -202,14 +237,16 @@ if [ "$USE_TIMESTAMP" = true ]; then
     FEATURE_NUM=$(date +%Y%m%d-%H%M%S)
     BRANCH_NAME="${FEATURE_NUM}-${BRANCH_SUFFIX}"
 else
-    # Determine branch number from existing feature directories
+    # Determine spec number from existing feature directories when not supplied
+    # explicitly (via --number or --issue).
     if [ -z "$BRANCH_NUMBER" ]; then
         HIGHEST=$(get_highest_from_specs "$SPECS_DIR")
         BRANCH_NUMBER=$((HIGHEST + 1))
     fi
 
-    # Force base-10 interpretation to prevent octal conversion (e.g., 010 → 8 in octal, but should be 10 in decimal)
-    FEATURE_NUM=$(printf "%03d" "$((10#$BRANCH_NUMBER))")
+    # Force base-10 interpretation to prevent octal conversion (e.g., 010 → 8 in octal, but should be 10 in decimal).
+    # Spec numbers are zero-padded to 4 digits; numbers >= 10000 (e.g. large GitHub issue numbers) keep their natural width.
+    FEATURE_NUM=$(printf "%04d" "$((10#$BRANCH_NUMBER))")
     BRANCH_NAME="${FEATURE_NUM}-${BRANCH_SUFFIX}"
 fi
 
@@ -218,7 +255,7 @@ fi
 MAX_BRANCH_LENGTH=244
 if [ ${#BRANCH_NAME} -gt $MAX_BRANCH_LENGTH ]; then
     # Calculate how much we need to trim from suffix
-    # Account for prefix length: timestamp (15) + hyphen (1) = 16, or sequential (3) + hyphen (1) = 4
+    # Account for prefix length: timestamp (15) + hyphen (1) = 16, or sequential (4) + hyphen (1) = 5
     PREFIX_LENGTH=$(( ${#FEATURE_NUM} + 1 ))
     MAX_SUFFIX_LENGTH=$((MAX_BRANCH_LENGTH - PREFIX_LENGTH))
     

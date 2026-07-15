@@ -111,11 +111,11 @@ Load only the minimal necessary context from each artifact:
 
 **From spec.md:**
 
-- Functional Requirements (FR-###)
-- Success Criteria (SC-###) — include only items requiring buildable work; exclude
+- Functional Requirements (FR-####-NNN)
+- Success Criteria (SC-####-NNN) — include only items requiring buildable work; exclude
   post-launch outcome metrics and business KPIs
-- User Stories and their Acceptance Scenarios
-- Edge Cases (if present)
+- User Stories (US-####-NN) and their Acceptance Scenarios (AS-####-NN-MM)
+- Edge Cases (EC-####-NN, if present)
 
 **From plan.md:**
 
@@ -137,8 +137,8 @@ Load only the minimal necessary context from each artifact:
 
 Create an internal model (do not echo raw artifacts):
 
-- **Requirements inventory**: one stable key per FR-### / SC-### / user-story acceptance
-  scenario (e.g. `US1/AC2`), plus the plan decisions and constitution principles that
+- **Requirements inventory**: one stable key per FR-####-NNN / SC-####-NNN / user-story acceptance
+  scenario (e.g. `AS-0042-01-02`, i.e. story `US-0042-01`, scenario 2), plus the plan decisions and constitution principles that
   impose buildable obligations.
 - **Code-scope map**: from the file paths named in `plan.md` and `tasks.md`, plus a keyword
   search for the concepts each requirement describes, derive the set of source files and
@@ -186,7 +186,7 @@ Before appending anything, output a compact, severity-graded summary (no file wr
 
 | ID | Gap Type | Severity | Source | Evidence | Remaining Work |
 |----|----------|----------|--------|----------|----------------|
-| F1 | missing  | HIGH     | FR-008 | Example: no append-only guard detected in path/to/module.py when writing tasks.md | Add append-only enforcement |
+| F1 | missing  | HIGH     | FR-0042-008 | Example: no append-only guard detected in path/to/module.py when writing tasks.md | Add append-only enforcement |
 
 **Summary metrics:**
 
@@ -202,18 +202,19 @@ Before appending anything, output a compact, severity-graded summary (no file wr
 
 Append to the **end** of `tasks.md`, per the append contract:
 
-1. Scan all existing task IDs; let `M` be the maximum. Determine the next phase number `N`
+1. Scan all existing task IDs (of the form `T-####-NNN`, sharing the spec number `####`);
+   let `M` be the maximum `NNN` sequence. Determine the next phase number `N`
    (highest existing phase + 1).
 2. Write a single new section header `## Phase N: Convergence`.
 3. Emit one checklist item per actionable finding, ordered CRITICAL/HIGH first, assigning
-   zero-padded IDs `T{M+1:03d}, T{M+2:03d}, …`:
+   zero-padded IDs `T-####-{M+1:03d}, T-####-{M+2:03d}, …` (reusing this spec's `####` number):
 
    ```markdown
-   - [ ] T042 <imperative description> per <source-ref> (<gap-type>)
+   - [ ] T-0042-042 <imperative description> per <source-ref> (<gap-type>)
    ```
 
-   `<source-ref>` traces the task to its origin: e.g. `FR-003`, `SC-002`,
-   `US1/AC2`, `plan: storage decision`, `Constitution II`.
+   `<source-ref>` traces the task to its origin: e.g. `FR-0042-003`, `SC-0042-002`,
+   `AS-0042-01-02`, `plan: storage decision`, `Constitution II`.
 
    `<gap-type>` is one of `missing`, `partial`, `contradicts`, `unrequested`.
 

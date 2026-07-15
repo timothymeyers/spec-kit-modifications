@@ -1,12 +1,26 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`
+**Feature Branch**: `[####-feature-name]`
+
+**Spec Number**: `[####]` (aligned to GitHub issue number)
+
+**GitHub Issue**: [#N — link to the tracking issue, referenced without leading zeros, e.g. #42]
 
 **Created**: [DATE]
 
 **Status**: Draft
 
 **Input**: User description: "$ARGUMENTS"
+
+<!--
+  ID CONVENTIONS (replace #### with this spec's 4-digit number, e.g. 0042):
+  - User Story:         US-####-NN         (NN = 2-digit story sequence, e.g. US-0042-01)
+  - Acceptance Scenario: AS-####-NN-MM      (NN = story sequence, MM = scenario sequence, e.g. AS-0042-01-01)
+  - Edge Case:          EC-####-NN         (NN = 2-digit sequence)
+  - Functional Requirement: FR-####-NNN    (NNN = 3-digit sequence)
+  - Success Criteria:   SC-####-NNN        (NNN = 3-digit sequence)
+  The spec number equals the tracking GitHub issue number, zero-padded to 4 digits.
+-->
 
 ## User Scenarios & Testing *(mandatory)*
 
@@ -23,7 +37,7 @@
   - Demonstrated to users independently
 -->
 
-### User Story 1 - [Brief Title] (Priority: P1)
+### User Story 1 - [Brief Title] (Priority: P1) `US-####-01`
 
 [Describe this user journey in plain language]
 
@@ -33,12 +47,12 @@
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
-2. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **AS-####-01-01** — **Given** [initial state], **When** [action], **Then** [expected outcome]
+2. **AS-####-01-02** — **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-### User Story 2 - [Brief Title] (Priority: P2)
+### User Story 2 - [Brief Title] (Priority: P2) `US-####-02`
 
 [Describe this user journey in plain language]
 
@@ -48,11 +62,11 @@
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **AS-####-02-01** — **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-### User Story 3 - [Brief Title] (Priority: P3)
+### User Story 3 - [Brief Title] (Priority: P3) `US-####-03`
 
 [Describe this user journey in plain language]
 
@@ -62,21 +76,21 @@
 
 **Acceptance Scenarios**:
 
-1. **Given** [initial state], **When** [action], **Then** [expected outcome]
+1. **AS-####-03-01** — **Given** [initial state], **When** [action], **Then** [expected outcome]
 
 ---
 
-[Add more user stories as needed, each with an assigned priority]
+[Add more user stories as needed, each with an assigned priority and a US-####-NN identifier]
 
 ### Edge Cases
 
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
-  Fill them out with the right edge cases.
+  Fill them out with the right edge cases, each with an EC-####-NN identifier.
 -->
 
-- What happens when [boundary condition]?
-- How does system handle [error scenario]?
+- **EC-####-01**: What happens when [boundary condition]?
+- **EC-####-02**: How does system handle [error scenario]?
 
 ## Requirements *(mandatory)*
 
@@ -87,16 +101,16 @@
 
 ### Functional Requirements
 
-- **FR-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
-- **FR-002**: System MUST [specific capability, e.g., "validate email addresses"]
-- **FR-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
-- **FR-004**: System MUST [data requirement, e.g., "persist user preferences"]
-- **FR-005**: System MUST [behavior, e.g., "log all security events"]
+- **FR-####-001**: System MUST [specific capability, e.g., "allow users to create accounts"]
+- **FR-####-002**: System MUST [specific capability, e.g., "validate email addresses"]
+- **FR-####-003**: Users MUST be able to [key interaction, e.g., "reset their password"]
+- **FR-####-004**: System MUST [data requirement, e.g., "persist user preferences"]
+- **FR-####-005**: System MUST [behavior, e.g., "log all security events"]
 
 *Example of marking unclear requirements:*
 
-- **FR-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
-- **FR-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
+- **FR-####-006**: System MUST authenticate users via [NEEDS CLARIFICATION: auth method not specified - email/password, SSO, OAuth?]
+- **FR-####-007**: System MUST retain user data for [NEEDS CLARIFICATION: retention period not specified]
 
 ### Key Entities *(include if feature involves data)*
 
@@ -112,10 +126,10 @@
 
 ### Measurable Outcomes
 
-- **SC-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
-- **SC-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
-- **SC-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
-- **SC-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
+- **SC-####-001**: [Measurable metric, e.g., "Users can complete account creation in under 2 minutes"]
+- **SC-####-002**: [Measurable metric, e.g., "System handles 1000 concurrent users without degradation"]
+- **SC-####-003**: [User satisfaction metric, e.g., "90% of users successfully complete primary task on first attempt"]
+- **SC-####-004**: [Business metric, e.g., "Reduce support tickets related to [X] by 50%"]
 
 ## Assumptions
 

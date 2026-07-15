@@ -136,8 +136,8 @@ You **MUST** consider the user input before proceeding (if not empty).
      - Use short, descriptive name based on domain (e.g., `ux.md`, `api.md`, `security.md`)
      - Format: `[domain].md`
    - File handling behavior:
-     - If file does NOT exist: Create new file and number items starting from CHK001
-     - If file exists: Append new items to existing file, continuing from the last CHK ID (e.g., if last item is CHK015, start new items at CHK016)
+     - If file does NOT exist: Create new file and number items starting from `CHK-####-001` (where `####` is the 4-digit spec number)
+     - If file exists: Append new items to existing file, continuing from the last CHK ID (e.g., if last item is `CHK-0042-015`, start new items at `CHK-0042-016`)
    - Never delete or replace existing checklist content - always preserve and append
 
    **CORE PRINCIPLE - Test the Requirements, Not the Implementation**:
@@ -248,7 +248,7 @@ You **MUST** consider the user input before proceeding (if not empty).
    - ✅ "Are [edge cases/scenarios] addressed in requirements?"
    - ✅ "Does the spec define [missing aspect]?"
 
-7. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001.
+7. **Structure Reference**: Generate the checklist following the canonical template in `.specify/templates/checklist-template.md` for title, meta section, category headings, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, `##` category sections containing `- [ ] CHK-####-NNN <requirement item>` lines (where `####` is the 4-digit spec number and `NNN` is a globally incrementing 3-digit sequence starting at 001, e.g. `CHK-0042-001`).
 
 8. **Report**: Output full path to checklist file, item count, and summarize whether the run created a new file or appended to an existing one. Summarize:
    - Focus areas selected
@@ -312,21 +312,21 @@ Sample items:
 **❌ WRONG - These test implementation, not requirements:**
 
 ```markdown
-- [ ] CHK001 - Verify landing page displays 3 episode cards [Spec §FR-001]
-- [ ] CHK002 - Test hover states work correctly on desktop [Spec §FR-003]
-- [ ] CHK003 - Confirm logo click navigates to home page [Spec §FR-010]
-- [ ] CHK004 - Check that related episodes section shows 3-5 items [Spec §FR-005]
+- [ ] CHK-0042-001 - Verify landing page displays 3 episode cards [Spec §FR-0042-001]
+- [ ] CHK-0042-002 - Test hover states work correctly on desktop [Spec §FR-0042-003]
+- [ ] CHK-0042-003 - Confirm logo click navigates to home page [Spec §FR-0042-010]
+- [ ] CHK-0042-004 - Check that related episodes section shows 3-5 items [Spec §FR-0042-005]
 ```
 
 **✅ CORRECT - These test requirements quality:**
 
 ```markdown
-- [ ] CHK001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-001]
-- [ ] CHK002 - Are hover state requirements consistently defined for all interactive elements? [Consistency, Spec §FR-003]
-- [ ] CHK003 - Are navigation requirements clear for all clickable brand elements? [Clarity, Spec §FR-010]
-- [ ] CHK004 - Is the selection criteria for related episodes documented? [Gap, Spec §FR-005]
-- [ ] CHK005 - Are loading state requirements defined for asynchronous episode data? [Gap]
-- [ ] CHK006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-001]
+- [ ] CHK-0042-001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-0042-001]
+- [ ] CHK-0042-002 - Are hover state requirements consistently defined for all interactive elements? [Consistency, Spec §FR-0042-003]
+- [ ] CHK-0042-003 - Are navigation requirements clear for all clickable brand elements? [Clarity, Spec §FR-0042-010]
+- [ ] CHK-0042-004 - Is the selection criteria for related episodes documented? [Gap, Spec §FR-0042-005]
+- [ ] CHK-0042-005 - Are loading state requirements defined for asynchronous episode data? [Gap]
+- [ ] CHK-0042-006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-0042-001]
 ```
 
 **Key Differences:**

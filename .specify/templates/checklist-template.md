@@ -22,19 +22,19 @@
 
 ## [Category 1]
 
-- [ ] CHK001 First checklist item with clear action
-- [ ] CHK002 Second checklist item
-- [ ] CHK003 Third checklist item
+- [ ] CHK-####-001 First checklist item with clear action
+- [ ] CHK-####-002 Second checklist item
+- [ ] CHK-####-003 Third checklist item
 
 ## [Category 2]
 
-- [ ] CHK004 Another category item
-- [ ] CHK005 Item with specific criteria
-- [ ] CHK006 Final item in this category
+- [ ] CHK-####-004 Another category item
+- [ ] CHK-####-005 Item with specific criteria
+- [ ] CHK-####-006 Final item in this category
 
 ## Notes
 
 - Check items off as completed: `[x]`
 - Add comments or findings inline
 - Link to relevant resources or documentation
-- Items are numbered sequentially for easy reference
+- Items are numbered sequentially as `CHK-####-NNN`, where `####` is the 4-digit spec number (aligned to the GitHub issue) and `NNN` is a 3-digit sequence

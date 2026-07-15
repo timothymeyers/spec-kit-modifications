@@ -5,7 +5,7 @@ description: "Task list template for feature implementation"
 
 # Tasks: [FEATURE NAME]
 
-**Input**: Design documents from `/specs/[###-feature-name]/`
+**Input**: Design documents from `/specs/[####-feature-name]/`
 
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
@@ -15,8 +15,9 @@ description: "Task list template for feature implementation"
 
 ## Format: `[ID] [P?] [Story] Description`
 
+- **[ID]**: Task identifier `T-####-NNN` where `####` is the 4-digit spec number (aligned to the GitHub issue) and `NNN` is a 3-digit sequence (e.g. `T-0042-001`)
 - **[P]**: Can run in parallel (different files, no dependencies)
-- **[Story]**: Which user story this task belongs to (e.g., US1, US2, US3)
+- **[Story]**: Which user story this task belongs to, using the story identifier (e.g., `US-0042-01`, `US-0042-02`)
 - Include exact file paths in descriptions
 
 ## Path Conventions
@@ -49,9 +50,9 @@ description: "Task list template for feature implementation"
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project structure per implementation plan
-- [ ] T002 Initialize [language] project with [framework] dependencies
-- [ ] T003 [P] Configure linting and formatting tools
+- [ ] T-####-001 Create project structure per implementation plan
+- [ ] T-####-002 Initialize [language] project with [framework] dependencies
+- [ ] T-####-003 [P] Configure linting and formatting tools
 
 ---
 
@@ -63,18 +64,18 @@ description: "Task list template for feature implementation"
 
 Examples of foundational tasks (adjust based on your project):
 
-- [ ] T004 Setup database schema and migrations framework
-- [ ] T005 [P] Implement authentication/authorization framework
-- [ ] T006 [P] Setup API routing and middleware structure
-- [ ] T007 Create base models/entities that all stories depend on
-- [ ] T008 Configure error handling and logging infrastructure
-- [ ] T009 Setup environment configuration management
+- [ ] T-####-004 Setup database schema and migrations framework
+- [ ] T-####-005 [P] Implement authentication/authorization framework
+- [ ] T-####-006 [P] Setup API routing and middleware structure
+- [ ] T-####-007 Create base models/entities that all stories depend on
+- [ ] T-####-008 Configure error handling and logging infrastructure
+- [ ] T-####-009 Setup environment configuration management
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
 ---
 
-## Phase 3: User Story 1 - [Title] (Priority: P1) 🎯 MVP
+## Phase 3: User Story 1 - [Title] (Priority: P1) `US-####-01` 🎯 MVP
 
 **Goal**: [Brief description of what this story delivers]
 
@@ -84,23 +85,23 @@ Examples of foundational tasks (adjust based on your project):
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T010 [P] [US1] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T011 [P] [US1] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T-####-010 [P] [US-####-01] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T-####-011 [P] [US-####-01] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 1
 
-- [ ] T012 [P] [US1] Create [Entity1] model in src/models/[entity1].py
-- [ ] T013 [P] [US1] Create [Entity2] model in src/models/[entity2].py
-- [ ] T014 [US1] Implement [Service] in src/services/[service].py (depends on T012, T013)
-- [ ] T015 [US1] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T016 [US1] Add validation and error handling
-- [ ] T017 [US1] Add logging for user story 1 operations
+- [ ] T-####-012 [P] [US-####-01] Create [Entity1] model in src/models/[entity1].py
+- [ ] T-####-013 [P] [US-####-01] Create [Entity2] model in src/models/[entity2].py
+- [ ] T-####-014 [US-####-01] Implement [Service] in src/services/[service].py (depends on T-####-012, T-####-013)
+- [ ] T-####-015 [US-####-01] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T-####-016 [US-####-01] Add validation and error handling
+- [ ] T-####-017 [US-####-01] Add logging for user story 1 operations
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
 ---
 
-## Phase 4: User Story 2 - [Title] (Priority: P2)
+## Phase 4: User Story 2 - [Title] (Priority: P2) `US-####-02`
 
 **Goal**: [Brief description of what this story delivers]
 
@@ -108,21 +109,21 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 2 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T018 [P] [US2] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T019 [P] [US2] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T-####-018 [P] [US-####-02] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T-####-019 [P] [US-####-02] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 2
 
-- [ ] T020 [P] [US2] Create [Entity] model in src/models/[entity].py
-- [ ] T021 [US2] Implement [Service] in src/services/[service].py
-- [ ] T022 [US2] Implement [endpoint/feature] in src/[location]/[file].py
-- [ ] T023 [US2] Integrate with User Story 1 components (if needed)
+- [ ] T-####-020 [P] [US-####-02] Create [Entity] model in src/models/[entity].py
+- [ ] T-####-021 [US-####-02] Implement [Service] in src/services/[service].py
+- [ ] T-####-022 [US-####-02] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T-####-023 [US-####-02] Integrate with User Story 1 components (if needed)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
 ---
 
-## Phase 5: User Story 3 - [Title] (Priority: P3)
+## Phase 5: User Story 3 - [Title] (Priority: P3) `US-####-03`
 
 **Goal**: [Brief description of what this story delivers]
 
@@ -130,14 +131,14 @@ Examples of foundational tasks (adjust based on your project):
 
 ### Tests for User Story 3 (OPTIONAL - only if tests requested) ⚠️
 
-- [ ] T024 [P] [US3] Contract test for [endpoint] in tests/contract/test_[name].py
-- [ ] T025 [P] [US3] Integration test for [user journey] in tests/integration/test_[name].py
+- [ ] T-####-024 [P] [US-####-03] Contract test for [endpoint] in tests/contract/test_[name].py
+- [ ] T-####-025 [P] [US-####-03] Integration test for [user journey] in tests/integration/test_[name].py
 
 ### Implementation for User Story 3
 
-- [ ] T026 [P] [US3] Create [Entity] model in src/models/[entity].py
-- [ ] T027 [US3] Implement [Service] in src/services/[service].py
-- [ ] T028 [US3] Implement [endpoint/feature] in src/[location]/[file].py
+- [ ] T-####-026 [P] [US-####-03] Create [Entity] model in src/models/[entity].py
+- [ ] T-####-027 [US-####-03] Implement [Service] in src/services/[service].py
+- [ ] T-####-028 [US-####-03] Implement [endpoint/feature] in src/[location]/[file].py
 
 **Checkpoint**: All user stories should now be independently functional
 
@@ -151,12 +152,12 @@ Examples of foundational tasks (adjust based on your project):
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] TXXX [P] Documentation updates in docs/
-- [ ] TXXX Code cleanup and refactoring
-- [ ] TXXX Performance optimization across all stories
-- [ ] TXXX [P] Additional unit tests (if requested) in tests/unit/
-- [ ] TXXX Security hardening
-- [ ] TXXX Run quickstart.md validation
+- [ ] T-####-XXX [P] Documentation updates in docs/
+- [ ] T-####-XXX Code cleanup and refactoring
+- [ ] T-####-XXX Performance optimization across all stories
+- [ ] T-####-XXX [P] Additional unit tests (if requested) in tests/unit/
+- [ ] T-####-XXX Security hardening
+- [ ] T-####-XXX Run quickstart.md validation
 
 ---
 
@@ -173,9 +174,9 @@ Examples of foundational tasks (adjust based on your project):
 
 ### User Story Dependencies
 
-- **User Story 1 (P1)**: Can start after Foundational (Phase 2) - No dependencies on other stories
-- **User Story 2 (P2)**: Can start after Foundational (Phase 2) - May integrate with US1 but should be independently testable
-- **User Story 3 (P3)**: Can start after Foundational (Phase 2) - May integrate with US1/US2 but should be independently testable
+- **User Story 1 (P1)** `US-####-01`: Can start after Foundational (Phase 2) - No dependencies on other stories
+- **User Story 2 (P2)** `US-####-02`: Can start after Foundational (Phase 2) - May integrate with US-####-01 but should be independently testable
+- **User Story 3 (P3)** `US-####-03`: Can start after Foundational (Phase 2) - May integrate with US-####-01/US-####-02 but should be independently testable
 
 ### Within Each User Story
 

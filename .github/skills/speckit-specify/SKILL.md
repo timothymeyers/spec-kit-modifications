@@ -76,6 +76,8 @@ Given that feature description, do this:
 
    If the user explicitly provided `GIT_BRANCH_NAME`, pass it through to the hook so the branch script uses the exact value as the branch name (bypassing all prefix/suffix generation).
 
+   **Spec number / GitHub issue alignment**: The spec number is a 4-digit, zero-padded value that **aligns to a GitHub issue number** (e.g. issue #42 → spec `0042`). This command *consumes* an existing issue number — it does not create the issue. If the user supplies an issue number (e.g. via `ISSUE_NUMBER`, `--issue N`, or a referenced issue), use that number as the spec number. If no issue number is supplied, fall back to the next available sequential number (see next step). Numbers of 10000 or greater keep their natural width rather than being truncated.
+
 3. **Create the spec feature directory**:
 
    Specs live under the default `specs/` directory unless the user explicitly provides `SPECIFY_FEATURE_DIRECTORY`.
@@ -84,9 +86,10 @@ Given that feature description, do this:
    1. If the user explicitly provided `SPECIFY_FEATURE_DIRECTORY` (e.g., via environment variable, argument, or configuration), use it as-is
    2. Otherwise, auto-generate it under `specs/`:
       - Check `.specify/init-options.json` for `feature_numbering` (preferred) or `branch_numbering` (deprecated, migration only — will be removed in a future release)
+      - Also check `.specify/init-options.json` for `spec_numbering` (`"issue"` = align the number to a GitHub issue number, consuming a supplied issue number; `"sequential"` or absent = next available number) and `spec_number_width` (zero-padding width, default `4`)
       - If `"timestamp"`: prefix is `YYYYMMDD-HHMMSS` (current timestamp)
-      - If `"sequential"` or absent: prefix is `NNN` (next available 3-digit number after scanning existing directories in `specs/`)
-      - Construct the directory name: `<prefix>-<short-name>` (e.g., `003-user-auth` or `20260319-143022-user-auth`)
+      - If `"sequential"` or absent: prefix is `NNNN` (a 4-digit spec number). When an aligned GitHub issue number is available, use it; otherwise use the next available number after scanning existing directories in `specs/` (zero-padded to `spec_number_width` digits, default 4, e.g. `0003`; numbers ≥ 10000 keep their natural width)
+      - Construct the directory name: `<prefix>-<short-name>` (e.g., `0042-user-auth` or `20260319-143022-user-auth`)
       - Set `SPECIFY_FEATURE_DIRECTORY` to `specs/<directory-name>`
       - If `branch_numbering` was used (and `feature_numbering` was absent), emit a one-line warning: "⚠️ `branch_numbering` in init-options.json is deprecated. Rename to `feature_numbering`."
 
@@ -101,7 +104,7 @@ Given that feature description, do this:
        "feature_directory": "<resolved feature dir>"
      }
      ```
-     Write the actual resolved directory path value (for example, `specs/003-user-auth`), not the literal string `SPECIFY_FEATURE_DIRECTORY`.
+     Write the actual resolved directory path value (for example, `specs/0042-user-auth`), not the literal string `SPECIFY_FEATURE_DIRECTORY`.
      This allows downstream commands (`/speckit-plan`, `/speckit-tasks`, etc.) to locate the feature directory without relying on git branch name conventions.
 
    **IMPORTANT**:
@@ -139,6 +142,15 @@ Given that feature description, do this:
     8. Return: SUCCESS (spec ready for planning)
 
 6. Write the specification to SPEC_FILE using the template structure, replacing placeholders with concrete details derived from the feature description (arguments) while preserving section order and headings.
+
+   **Identifier conventions**: Replace the template's `####` placeholder with this spec's 4-digit spec number (the same number used in the feature directory / GitHub issue) in every identifier. Apply these ID schemes consistently:
+   - **User Story**: `US-####-NN` (NN = 2-digit story sequence, e.g. `US-0042-01`)
+   - **Acceptance Scenario**: `AS-####-NN-MM` (NN = the parent story's sequence, MM = 2-digit scenario sequence, e.g. `AS-0042-01-01`) — acceptance scenarios are story-linked
+   - **Edge Case**: `EC-####-NN` (2-digit sequence)
+   - **Functional Requirement**: `FR-####-NNN` (3-digit sequence, e.g. `FR-0042-001`)
+   - **Success Criteria**: `SC-####-NNN` (3-digit sequence)
+
+   These IDs are what downstream commands (`/speckit-clarify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-analyze`) reference for traceability, so they must be present and consistent.
 
 7. **Specification Quality Validation**: After writing the initial spec, validate it against quality criteria:
 
