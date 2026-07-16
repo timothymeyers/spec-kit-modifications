@@ -299,6 +299,30 @@ Work through each close-out template section:
 - Apply the criteria from `.specify/memory/lessons-learned/README.md`
 - Append to EXISTING topic files — do NOT create new per-spec files
 - Leave implementation-specific details in PR descriptions
+
+**When to Add a Lesson**
+
+A lesson earns its place only if it meets at least one of these criteria:
+
+- Cross-cutting pitfall that an agent could reintroduce (e.g., MSYS path
+  conversion, FastAPI import order)
+- Non-obvious external constraint not discoverable from code or docs (e.g.,
+  GlobalStandard SKU unavailable in Gov)
+- Project-specific architectural decision with rationale that would otherwise be
+  re-litigated
+- Actively cited by an instructions file, the constitution, or another lesson
+
+Implementation-specific details (PR retros, feature changelogs, one-time bugfix
+notes) belong in PR descriptions, not here.
+
+**How to Add a Lesson**
+
+- Append to an existing topic file — don't create a new file unless no existing
+  file covers the subject area. When a new topic file is required, base it on
+  `.specify/templates/lessons-learned-template.md`.
+- Keep entries concise — problem → solution → key insight format.
+- Include code samples only when the pitfall is non-obvious from description
+  alone.
 - **Stricter four-gate check** — each candidate lesson MUST pass ALL four:
   1. **Novelty** — not already captured in the constitution, copilot-instructions,
      or an existing lessons-learned file
@@ -551,6 +575,7 @@ before opening the PR. Record the gate results in `CLOSEOUT_SUMMARY.md`.
 - Every promoted item MUST have a spec back-reference.
 - ADRs MUST follow the template in `.specify/templates/adr-template.md`.
 - Lessons MUST meet the criteria in `.specify/memory/lessons-learned/README.md`.
+- New lessons-learned topic files MUST follow `.specify/templates/lessons-learned-template.md`.
 - Glossary entries MUST be alphabetically sorted.
 - Tables MUST maintain consistent column alignment.
 
