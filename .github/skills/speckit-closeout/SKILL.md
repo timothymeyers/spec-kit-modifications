@@ -369,7 +369,7 @@ Default form (docs without a Superseded Requirements section, e.g.
 ```
 **Version:** YYYY.MM.DD  •  **Living document** — updated by `speckit.closeout`.
 **Last updated:** YYYY-MM-DD by closeout of SPEC-####.
-**Changelog:** see `specs/_archive/`.
+**Changelog:** see `specs/`.
 ```
 
 Extended form for `docs/product-spec.md` only (which has a Superseded
@@ -378,7 +378,7 @@ Requirements section):
 ```
 **Version:** YYYY.MM.DD  •  **Living document** — updated by `speckit.closeout`.
 **Last updated:** YYYY-MM-DD by closeout of SPEC-####.
-**Changelog:** see `specs/_archive/` and the [Superseded Requirements](#superseded-requirements) table.
+**Changelog:** see `specs/` and the [Superseded Requirements](#superseded-requirements) table.
 ```
 
 Rules:
