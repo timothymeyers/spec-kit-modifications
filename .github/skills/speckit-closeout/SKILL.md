@@ -92,14 +92,14 @@ fallback only when no suitable section exists. Specific examples:
   **not** modify application code.
 - **Do not run tests or builds** — these are documentation-only changes.
 - **Only close out the target spec** — do not perform a separate repo-wide cross-spec supersession audit beyond updating the living docs/ADRs that overlap this spec’s topics.
-- **Ignore `specs/GAP_ANALYSIS.md`** — that is a separate periodic audit.
 - **`--dry-run`**: when this flag is present, produce the close-out summary and
   promotion plan **without modifying any `docs/` files**.
 
 **Constitution Authority**: The project constitution
-(`.specify/memory/constitution.md`) governs this close-out (e.g., Principle X
-requires every configuration entry to have a Bicep location). If the
-constitution is an unfilled template, skip constitution checks gracefully.
+(`.specify/memory/constitution.md`) governs this close-out. Read it to
+understand the governance requirements that apply to the docs being promoted.
+If the constitution is an unfilled template, skip constitution checks
+gracefully.
 
 ## Execution Steps
 
@@ -324,7 +324,8 @@ Work through each close-out template section:
 #### 3.8 Configuration Reference (`docs/configuration.md`)
 
 - Cross-reference `plan.md` and application code for env vars / secrets
-- Verify each entry has a Bicep location (Constitution Principle X)
+- Verify each entry meets the configuration governance requirements defined in
+  the constitution (for example, an infrastructure/provisioning location)
 
 #### 3.9 Scenarios (`docs/scenarios.md`)
 
@@ -504,9 +505,10 @@ before opening the PR. Record the gate results in `CLOSEOUT_SUMMARY.md`.
    schema. Renamed or removed entities are in the Deprecated Entities table,
    not silently duplicated next to their replacements.
 10. **`docs/configuration.md` gate** — Every env var referenced in application
-    code introduced or modified by this spec exists here AND has a Bicep
-    location (Constitution Principle X). Removed env vars are annotated as
-    deprecated, not silently dropped.
+    code introduced or modified by this spec exists here AND satisfies the
+    configuration governance requirements defined in the constitution (for
+    example, an infrastructure/provisioning location). Removed env vars are
+    annotated as deprecated, not silently dropped.
 11. **`docs/glossary.md` gate** — Alphabetical sort intact; no duplicate or
     contradictory definitions for the same term.
 12. **Cross-doc gate** — Capability names, component names, entity
