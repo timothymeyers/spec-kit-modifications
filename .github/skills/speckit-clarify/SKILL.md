@@ -129,7 +129,8 @@ Execution steps:
    For each category with Partial or Missing status, add one or more findings. If the unresolved decision belongs in planning rather than the specification, still include it and recommend explicitly deferring that decision to `/speckit-plan`.
 
 4. Build a complete finding inventory. For each issue:
-   - Assign a stable sequential ID using `CLAR-001`, `CLAR-002`, and so on.
+   - Sort findings by severity (CRITICAL→LOW), then by spec location.
+   - Assign a stable sequential ID in that sorted order using `CLAR-001`, `CLAR-002`, and so on.
    - Record the taxonomy category and source location using section names and line numbers when available.
    - State the ambiguity as a direct question that identifies the decision the spec leaves unresolved.
    - Assign severity:
