@@ -21,13 +21,13 @@ Produces `spec.md`, `plan.md`, `tasks.md`, and all speckit non-implementation ar
 | 1 | **You** | Create branch `specs/NNNN-my-feature` from `main` |
 | 2 | Agent | "`/speckit-specify` GH issue #NNNN" |
 | 3 | Agent | "`/speckit-clarify` spec NNNN and produce a full report with all questions and recommendations in `clarify-report.md`" |
-| 4 | **csa · python-dev · specialized agents** | "Review `clarify-report.md` and recommendations. Address everything you agree with; flag anything I need to review" |
-| 5 | **You** | Review PR — comment, request changes, iterate until happy with `spec.md` |
+| 4 | Apecialized Agents | "`/speckit-model-council-review` the `clarify-report.md` with the csa agent." |
+| 5 | **You** - a Gate | Review PR — comment, request changes, iterate until happy with `spec.md` |
 | 6 | Agent | "`/speckit-plan` and `/speckit-tasks` spec NNNN" |
 | 7 | Agent | "`/speckit-analyze` spec package for NNNN. Produce a `spec-analysis.md`" |
-| 8 | **You** | Review PR (all artifacts + `spec-analysis.md`). Prompt: "@copilot Address all feedback" |
+| 8 | **You** - a Gate| Review PR (all artifacts + `spec-analysis.md`). Prompt: "@copilot Address all feedback" |
 | 9 | **You + Agent** | Iterate until `/speckit-analyze` confirms you're **ready for `/speckit-implement`** |
-| 10 | **You** | Merge the full Spec Package back to `main` |
+| 10 | **You** - a Gate | Merge the full Spec Package back to `main` |
 
 > **The `analyze` loop (step 10) is the real gate.** Everything before it is
 > throwaway-cheap; everything after is expensive. Do not leave Phase I until
