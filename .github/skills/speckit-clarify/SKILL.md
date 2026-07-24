@@ -54,9 +54,7 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Outline
 
-Goal: Perform a comprehensive, non-interactive ambiguity audit of the active feature specification and write every finding with a recommended resolution to `FEATURE_DIR/clarify-report.md`.
-
-Note: This clarification workflow is expected to run (and be completed) BEFORE invoking `/speckit-plan`. If the user explicitly states they are skipping clarification (e.g., exploratory spike), you may proceed, but must warn that downstream rework risk increases.
+Goal: Perform a comprehensive, non-interactive ambiguity audit of the active feature specification and write every finding with a recommended resolution to `FEATURE_DIR/clarify-report.md`. Complete this workflow before invoking `/speckit-plan`.
 
 ## Operating Constraints
 
@@ -201,7 +199,7 @@ Execution steps:
 
 Behavior rules:
 
-- Always create `FEATURE_DIR/clarify-report.md`, including when no ambiguities are found.
+- On every successful invocation with an existing feature spec, create `FEATURE_DIR/clarify-report.md`, including when no ambiguities are found.
 - If spec file missing, instruct user to run `/speckit-specify` first (do not create a new spec here).
 - Never ask the user questions during execution and never impose a maximum finding count.
 - Avoid speculative tech stack questions unless the absence blocks functional clarity.
