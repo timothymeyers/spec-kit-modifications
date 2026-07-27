@@ -58,7 +58,7 @@ Identify inconsistencies, duplications, ambiguities, and underspecified items ac
 
 ## Operating Constraints
 
-**REPORT-ONLY**: Do not modify `spec.md`, `plan.md`, `tasks.md`, the constitution, or any other project artifact. Write or replace only `FEATURE_DIR/spec-analysis.md`. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
+**REPORT-ONLY**: The analysis itself must not modify `spec.md`, `plan.md`, `tasks.md`, the constitution, or any other project artifact. Aside from effects of mandatory extension hooks, write or replace only `FEATURE_DIR/spec-analysis.md`. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
 
 **Constitution Authority**: The project constitution (`.specify/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit-analyze`.
 
@@ -73,7 +73,7 @@ Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --inclu
 - TASKS = FEATURE_DIR/tasks.md
 - REPORT = FEATURE_DIR/spec-analysis.md
 
-Abort with an error message if any required file is missing (instruct the user to run missing prerequisite command).
+`REPORT` is an output and need not exist before analysis. Abort with an error message if `SPEC`, `PLAN`, or `TASKS` is missing (instruct the user to run the missing prerequisite command).
 For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
 
 ### 2. Load Artifacts (Progressive Disclosure)
@@ -221,7 +221,7 @@ Before completion, verify:
 - Finding IDs are unique and stable, and every finding includes category, severity, location, summary, and recommendation.
 - Finding and metric counts agree throughout the report.
 - Coverage entries account for every requirement included in the requirements inventory.
-- `spec.md`, `plan.md`, `tasks.md`, the constitution, and all other project artifacts remain unchanged.
+- The analysis itself left `spec.md`, `plan.md`, `tasks.md`, the constitution, and all other project artifacts unchanged; separately identify any changes caused by mandatory extension hooks.
 
 ### 10. Check for extension hooks
 
@@ -281,7 +281,7 @@ After extension hooks are dispatched or skipped, report:
 - Total findings and severity counts.
 - Coverage percentage and any unmapped task count.
 - Whether any implementation-blocking findings remain.
-- Confirmation that no artifact other than `spec-analysis.md` was modified.
+- Confirmation that the analysis modified no artifact other than `spec-analysis.md`, with any mandatory extension-hook effects identified separately.
 - Suggested next command.
 
 ## Done When
