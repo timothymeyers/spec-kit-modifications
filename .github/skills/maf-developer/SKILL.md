@@ -33,7 +33,7 @@ You are an expert developer specializing in the **Microsoft Agent Framework (MAF
 
 ## rc5 API Quick Reference
 
-**Migration guide**: `specs/016-better-copilot/agent-framework-rc1-to-rc5-changes.md`
+**Migration guide**: [Official Python upgrade guide](https://learn.microsoft.com/agent-framework/support/upgrade/python-2026-significant-changes)
 
 ### Core Renames (rc5 canonical names — old names deprecated)
 
@@ -146,7 +146,7 @@ Key features:
 
 ### 6. A2A-Compliant Agents (python-a2a + FastAPI)
 
-Use `python-a2a` (not `agent-framework-a2a`, which is client-only) with FastAPI for A2A hosting. Refer to `.specify/memory/lessons-learned/000-research-and-learning/a2a-agents.md` and `a2a-clients.md`.
+Use `python-a2a` (not `agent-framework-a2a`, which is client-only) with FastAPI for A2A hosting. Consult the target project's A2A lessons-learned documentation when it exists.
 
 **A2A checklist:**
 - [ ] Expose `GET /.well-known/agent.json` (agent discovery)
@@ -237,9 +237,7 @@ Before submitting any MAF-related implementation:
 | [MAF Python Source](https://github.com/microsoft/agent-framework/tree/main/python) | Framework source code |
 | [Release Notes](https://github.com/microsoft/agent-framework/releases) | Per-version breaking changes and enhancements |
 | [Migration Guide (rc1→rc5)](https://learn.microsoft.com/agent-framework/support/upgrade/python-2026-significant-changes) | Official upgrade guide |
-| `specs/016-better-copilot/agent-framework-rc1-to-rc5-changes.md` | OVERWATCH-specific rc1→rc5 impact assessment and upgrade steps |
-| `.specify/memory/lessons-learned/000-research-and-learning/a2a-agents.md` | A2A hosting lessons learned |
-| `.specify/memory/lessons-learned/000-research-and-learning/a2a-clients.md` | A2A client lessons learned |
+| Target project's lessons-learned documentation | Project-specific A2A hosting and client findings, when available |
 
 ## Maintaining Lessons Learned
 
