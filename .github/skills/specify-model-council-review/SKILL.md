@@ -21,7 +21,11 @@ You **MUST** consider the user input before proceeding.
 
 - **Review target (required)**: The path to the Markdown report whose findings and
   recommendations the council must review, such as `clarify-report.md` or
-  `spec-analysis.md`.
+  `spec-analysis.md`. A relative path may be resolved from the active feature
+  directory.
+- **Specification (optional)**: An explicit path to the specification under
+  review. When omitted, use the active feature context persisted in
+  `.specify/feature.json`.
 - **Specialist agent (optional)**: The specialist agent type each council member
   uses. Accept `--specialist <agent-type>` or an unambiguous equivalent in the
   user's request. Default to `csa`.
@@ -62,20 +66,34 @@ about outcomes where the council disagrees and a product decision is required.
 
 ### 1. Resolve Context
 
-1. Resolve the review target from the user input as a repository-relative or
-   absolute path.
-2. Identify the specification under review in this order:
+1. From the repository root, run
+   `.specify/scripts/bash/check-prerequisites.sh --json --paths-only` once and
+   parse `FEATURE_DIR` and `FEATURE_SPEC`. This is the same active-feature
+   resolution used by the other speckit skills: the script honors an explicit
+   `SPECIFY_FEATURE_DIRECTORY` override, then reads the `feature_directory`
+   persisted in `.specify/feature.json`. Do not infer feature context from the
+   current branch.
+   - If path resolution fails and the user did not provide an explicit spec
+     path, stop and instruct the user to run `/speckit-specify` or repair
+     `.specify/feature.json`.
+   - If the user supplied an explicit spec path, it remains usable even when no
+     active feature context is configured.
+2. Resolve the review target from the user input. Accept an absolute path or a
+   repository-relative path; when a relative path does not exist from the
+   repository root, resolve it relative to `FEATURE_DIR`.
+3. Identify the specification under review in this order:
    - an explicit spec path supplied by the user;
+   - `FEATURE_SPEC` from the active feature context;
    - the spec path declared in the report;
    - `spec.md` in the report's directory.
-3. Stop with a concise error if exactly one existing specification cannot be
+4. Stop with a concise error if one existing specification cannot be uniquely
    identified. Do not create a new feature specification.
-4. Load:
+5. Load:
    - the complete review target;
    - the identified `spec.md`;
    - `.specify/memory/constitution.md`, if present;
    - artifacts explicitly referenced by a finding when needed to judge it.
-5. Build a finding inventory from the report. Record each finding's ID,
+6. Build a finding inventory from the report. Record each finding's ID,
    location, severity, issue statement, recommendation, and proposed rewrite
    when present.
 
