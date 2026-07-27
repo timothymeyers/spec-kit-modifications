@@ -1,6 +1,6 @@
 ---
 name: "speckit-analyze"
-description: "Analyze consistency and quality across spec.md, plan.md, and tasks.md after task generation, and write spec-analysis.md."
+description: "Analyze consistency and quality across spec.md, plan.md, and tasks.md after task generation, and write FEATURE_DIR/spec-analysis.md."
 compatibility: "Requires spec-kit project structure with .specify/ directory"
 metadata:
   author: "github-spec-kit"
