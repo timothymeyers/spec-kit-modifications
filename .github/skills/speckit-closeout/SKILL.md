@@ -392,7 +392,7 @@ Default form (docs without a Superseded Requirements section, e.g.
 `glossary.md`, `scenarios.md`, `product-spec-traceability.md`):
 
 ```
-**Version:** YYYY.MM.DD  •  **Living document** — updated by `speckit.closeout`.
+**Version:** YYYY.MM.DD  •  **Living document** — updated by `/speckit-closeout` skill.
 **Last updated:** YYYY-MM-DD by closeout of SPEC-####.
 **Changelog:** see `specs/`.
 ```
@@ -401,7 +401,7 @@ Extended form for `docs/product-spec.md` only (which has a Superseded
 Requirements section):
 
 ```
-**Version:** YYYY.MM.DD  •  **Living document** — updated by `speckit.closeout`.
+**Version:** YYYY.MM.DD  •  **Living document** — updated by `/speckit-closeout` skill.
 **Last updated:** YYYY-MM-DD by closeout of SPEC-####.
 **Changelog:** see `specs/` and the [Superseded Requirements](#superseded-requirements) table.
 ```
