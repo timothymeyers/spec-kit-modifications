@@ -53,7 +53,7 @@ about outcomes where the council disagrees and a product decision is required.
   disagreement.
 - Apply changes only through the skill that owns the affected artifact:
   - use `/speckit-specify` for `spec.md`;
-  - use `/speckit-plan` for `plan.md`, `research.md`, and data contracts;
+  - use `/speckit-plan` for `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, and `contracts/`;
   - use `/speckit-tasks` for `tasks.md`.
   Platform-equivalent skill invocations are acceptable.
 - Preserve finding IDs from the source report. Generate stable IDs only for
@@ -77,14 +77,14 @@ about outcomes where the council disagrees and a product decision is required.
    - the complete review target;
    - the identified `spec.md`;
    - `.specify/memory/constitution.md`, if present;
-   - `plan.md`, `research.md`, data contracts, and `tasks.md` when they exist or
+   - `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, `contracts/`, and `tasks.md` when they exist or
      are referenced by a finding;
    - other artifacts explicitly referenced by a finding when needed to judge it.
 5. Build a finding inventory from the report. Record each finding's ID,
    location, affected artifact, severity, issue statement, recommendation, and
    proposed rewrite when present. Classify each affected artifact as
-   specification (`spec.md`), plan (`plan.md`, `research.md`, or a data
-   contract), or task list (`tasks.md`). If the affected artifact is ambiguous,
+   specification (`spec.md`), plan (`plan.md`, `research.md`, `data-model.md`,
+   `quickstart.md`, or `contracts/`), or task list (`tasks.md`). If the affected artifact is ambiguous,
    treat the finding as requiring a user decision rather than guessing.
 
 ### 2. Launch the Council
@@ -143,8 +143,7 @@ If one or more findings have **Consensus — apply**:
    agreed resolution, target artifact and location, and relevant constraints.
 2. Invoke each required skill once in this dependency order:
    1. `speckit-specify` for findings targeting `spec.md`;
-   2. `speckit-plan` for findings targeting `plan.md`, `research.md`, or data
-      contracts;
+   2. `speckit-plan` for findings targeting `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, or `contracts/`;
    3. `speckit-tasks` for findings targeting `tasks.md`.
 3. Invoke each skill in explicit refinement mode against the existing
    artifacts. Instruct it to:
