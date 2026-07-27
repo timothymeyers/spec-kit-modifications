@@ -1,7 +1,7 @@
 ---
 name: "specify-model-council-review"
-description: "Review a specification report with a three-model specialist council, apply unanimous remediations through speckit-specify, record dispositions, and escalate only disagreements."
-compatibility: "Requires task-agent model selection and a spec-kit project with the speckit-specify skill"
+description: "Review a specification report with a three-model specialist council, route unanimous remediations to the appropriate speckit skill, record dispositions, and escalate only disagreements."
+compatibility: "Requires task-agent model selection and a spec-kit project with the speckit-specify, speckit-plan, and speckit-tasks skills"
 metadata:
   author: "timothymeyers"
   source: "custom"
@@ -51,8 +51,11 @@ about outcomes where the council disagrees and a product decision is required.
 - Treat unanimity as consensus. A 2–1 result is disagreement, not consensus.
 - The coordinating agent MUST NOT cast a fourth vote or silently resolve a
   disagreement.
-- Apply specification changes only through `/speckit-specify` (or the
-  platform-equivalent invocation of the `speckit-specify` skill).
+- Apply changes only through the skill that owns the affected artifact:
+  - use `/speckit-specify` for `spec.md`;
+  - use `/speckit-plan` for `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, and `contracts/`;
+  - use `/speckit-tasks` for `tasks.md`.
+  Platform-equivalent skill invocations are acceptable.
 - Preserve finding IDs from the source report. Generate stable IDs only for
   unnumbered findings.
 - Do not expose the council's chain-of-thought. Retain only decisions, concise
@@ -74,10 +77,15 @@ about outcomes where the council disagrees and a product decision is required.
    - the complete review target;
    - the identified `spec.md`;
    - `.specify/memory/constitution.md`, if present;
-   - artifacts explicitly referenced by a finding when needed to judge it.
+   - `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, `contracts/`, and `tasks.md` when they exist or
+     are referenced by a finding;
+   - other artifacts explicitly referenced by a finding when needed to judge it.
 5. Build a finding inventory from the report. Record each finding's ID,
-   location, severity, issue statement, recommendation, and proposed rewrite
-   when present.
+   location, affected artifact, severity, issue statement, recommendation, and
+   proposed rewrite when present. Classify each affected artifact as
+   specification (`spec.md`), plan (`plan.md`, `research.md`, `data-model.md`,
+   `quickstart.md`, or `contracts/`), or task list (`tasks.md`). If the affected artifact is ambiguous,
+   treat the finding as requiring a user decision rather than guessing.
 
 ### 2. Launch the Council
 
@@ -94,6 +102,7 @@ requires it to:
    | Field | Allowed content |
    |-------|-----------------|
    | Finding ID | Existing or coordinator-assigned stable ID |
+   | Affected artifact | Exact artifact path from the finding inventory |
    | Finding verdict | `VALID` or `NOT_VALID` |
    | Recommendation verdict | `ACCEPT`, `MODIFY`, or `REJECT` |
    | Resolution | Exact outcome or concise replacement requirement |
@@ -102,7 +111,7 @@ requires it to:
 
 3. Preserve the report's finding order.
 4. Make each resolution concrete enough to pass directly to
-   `speckit-specify`.
+   the skill that owns the affected artifact.
 5. Return a concise structured result without hidden reasoning.
 
 Wait for all three tasks to complete. If a task fails, retry that same
@@ -129,22 +138,28 @@ severity or majority vote to override this rule.
 
 If one or more findings have **Consensus — apply**:
 
-1. Create one consolidated remediation request containing each finding ID, the
-   agreed resolution, its target spec location, and relevant constraints.
-2. Invoke `speckit-specify` once in explicit refinement mode against the
-   existing specification. Instruct it to:
-   - update the identified `spec.md` in place;
-   - address every listed finding;
-   - preserve unrelated content and stable requirement identifiers;
-   - avoid creating a feature directory, branch, or second spec;
-   - validate the updated specification using its normal quality checks.
-3. Verify that every agreed resolution appears in the resulting specification
-   and that no unrelated requirement changed.
-4. If verification fails, retry the remediation once with the missing finding
-   IDs and exact deficiencies. If it still fails, mark those findings
+1. Group findings by owning skill and create one consolidated remediation
+   request per skill. Each request must contain every applicable finding ID, the
+   agreed resolution, target artifact and location, and relevant constraints.
+2. Invoke each required skill once in this dependency order:
+   1. `speckit-specify` for findings targeting `spec.md`;
+   2. `speckit-plan` for findings targeting `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, or `contracts/`;
+   3. `speckit-tasks` for findings targeting `tasks.md`.
+3. Invoke each skill in explicit refinement mode against the existing
+   artifacts. Instruct it to:
+   - update only the artifacts owned by that skill in place;
+   - address every finding assigned to that skill;
+   - preserve unrelated content and stable identifiers;
+   - avoid creating a feature directory, branch, or duplicate artifact;
+   - validate the updated artifacts using its normal quality checks.
+4. Verify that every agreed resolution appears in its target artifact and that
+   no unrelated content changed.
+5. If verification fails, retry the responsible skill once with the missing
+   finding IDs and exact deficiencies. If it still fails, mark those findings
    `REMEDIATION_FAILED`; surface the failure rather than claiming completion.
 
-Do not invoke `speckit-specify` when there are no agreed specification changes.
+Do not invoke a remediation skill when no agreed changes target artifacts owned
+by that skill.
 
 ### 5. Update the Review Report
 
@@ -152,20 +167,20 @@ Update the original report in place after remediation. Preserve its findings,
 recommendations, and existing structure. Add or refresh a `Model Council
 Disposition` section containing:
 
-| Finding ID | Disposition | Council Resolution | Spec Evidence | Notes |
-|------------|-------------|--------------------|---------------|-------|
+| Finding ID | Disposition | Council Resolution | Artifact Evidence | Notes |
+|------------|-------------|--------------------|-------------------|-------|
 
 Use these dispositions:
 
-- `APPLIED` — unanimous resolution was verified in `spec.md`;
-- `NO_CHANGE` — unanimous decision that no spec change is warranted;
+- `APPLIED` — unanimous resolution was verified in its target artifact;
+- `NO_CHANGE` — unanimous decision that no artifact change is warranted;
 - `USER_DECISION_REQUIRED` — council disagreement requires user input;
 - `REMEDIATION_FAILED` — an agreed change could not be verified.
 
-For `APPLIED`, cite the updated spec heading and requirement IDs. For
-`NO_CHANGE`, record a concise shared rationale. For disagreements, summarize
-the distinct options without identifying hidden reasoning or presenting a
-coordinator preference.
+For `APPLIED`, cite the updated artifact path, heading, and stable identifiers
+when present. For `NO_CHANGE`, record a concise shared rationale. For
+disagreements, summarize the distinct options without identifying hidden
+reasoning or presenting a coordinator preference.
 
 Make the update idempotent: replace the prior council disposition for the same
 finding rather than appending duplicate rows. Recalculate any report metadata
@@ -174,7 +189,7 @@ that explicitly tracks open, resolved, or disposition counts.
 ### 6. Respond to the User
 
 - If every finding is `APPLIED` or `NO_CHANGE`, report completion concisely with
-  the updated spec and report paths. Do not ask for confirmation.
+  the updated artifact and report paths. Do not ask for confirmation.
 - If disagreements exist, surface only those findings. For each, show:
   - finding ID and the decision required;
   - the distinct council-supported options and their implications;
@@ -183,15 +198,16 @@ that explicitly tracks open, resolved, or disposition counts.
 - Do not include unanimous findings, routine progress, or full council reviews
   in the decision request.
 
-After the user resolves disagreements, apply the selected resolutions through
-`speckit-specify`, verify the specification, update the corresponding report
-dispositions to `APPLIED` or `NO_CHANGE`, and report completion.
+After the user resolves disagreements, apply each selected resolution through
+the skill that owns its affected artifact, verify the artifact, update the
+corresponding report dispositions to `APPLIED` or `NO_CHANGE`, and report
+completion.
 
 ## Done When
 
 - [ ] Three independent reviews completed with the required specialist and models
 - [ ] Every source finding has a unanimous or disagreement classification
-- [ ] Every unanimous remediation was applied through `speckit-specify`
-- [ ] The specification changes were verified
+- [ ] Every unanimous remediation was applied through its artifact-owning skill
+- [ ] All changed artifacts were verified
 - [ ] The source report contains one current disposition per finding
 - [ ] Only disagreements or remediation failures were surfaced to the user
