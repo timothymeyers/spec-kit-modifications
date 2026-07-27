@@ -221,7 +221,7 @@ Before completion, verify:
 - Finding IDs are unique and stable, and every finding includes category, severity, location, summary, and recommendation.
 - Finding and metric counts agree throughout the report.
 - Coverage entries account for every requirement included in the requirements inventory.
-- The analysis itself left `spec.md`, `plan.md`, `tasks.md`, the constitution, and all other project artifacts unchanged; separately identify any changes caused by mandatory extension hooks.
+- The analysis itself left `spec.md`, `plan.md`, `tasks.md`, the constitution, and all other project artifacts unchanged; identify any changes caused by mandatory `hooks.after_analyze` separately in the Completion Report.
 
 ### 10. Check for extension hooks
 
