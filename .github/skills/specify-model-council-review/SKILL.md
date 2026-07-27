@@ -269,7 +269,7 @@ Review Recommendations`, update the corresponding report disposition to
 ## Done When
 
 - [ ] Three independent reviews completed with the required specialist and models
-- [ ] Every source finding has a unanimous or disagreement classification
+- [ ] Every source finding has a consensus, disagreement, or high-risk classification
 - [ ] `Council Review Recommendations` contains every low-risk unanimous disposition
 - [ ] `Needs Human Review` contains only substantive disagreements and material risks
 - [ ] Every unanimous remediation was applied through its artifact-owning skill
