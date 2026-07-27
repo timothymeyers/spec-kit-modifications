@@ -1,4 +1,4 @@
-# SpecKit Process — End to End (How Tim tends to work)
+# Spec Kit Process — End to End
 
 This document describes the full end-to-end SpecKit workflow used in this repo: a
 two-phase process that first produces a complete **Spec Package**, then executes the
