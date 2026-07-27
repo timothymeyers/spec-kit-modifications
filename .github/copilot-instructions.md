@@ -1,5 +1,17 @@
 # GitHub Copilot Instructions
 
+## Before Starting Work
+
+Consult these living artifacts before beginning any task, when present:
+- **Product Spec**: `docs/product-spec.md` — canonical feature and capability reference
+- **Architecture**: `docs/architecture.md` — component map, invariants, and data flow
+- **Technical overview**: `docs/technical-overview.md` — languages, frameworks, testing, infra
+- **Data model**: `docs/data-model-reference.md` — stores, entities, status lifecycle
+- **Configuration**: `docs/configuration.md` — environment variables and runtime settings
+- **Lessons learned**: `.specify/memory/lessons-learned/` — prior findings
+ 
+If implementing a new Feature, note that that Feature's specs may override, amend, or supersede any of these documents.
+
 ## Purpose
 
 This repository is a general-purpose collection of Spec Kit skills, prompts,
