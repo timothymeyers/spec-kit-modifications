@@ -1,6 +1,6 @@
 ---
 name: "speckit-analyze"
-description: "Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation."
+description: "Analyze consistency and quality across spec.md, plan.md, and tasks.md after task generation, and write spec-analysis.md."
 compatibility: "Requires spec-kit project structure with .specify/ directory"
 metadata:
   author: "github-spec-kit"
@@ -54,11 +54,11 @@ You **MUST** consider the user input before proceeding (if not empty).
 
 ## Goal
 
-Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation. This command MUST run only after `/speckit-tasks` has successfully produced a complete `tasks.md`.
+Identify inconsistencies, duplications, ambiguities, and underspecified items across the three core artifacts (`spec.md`, `plan.md`, `tasks.md`) before implementation, and write the results to `FEATURE_DIR/spec-analysis.md`. This command MUST run only after `/speckit-tasks` has successfully produced a complete `tasks.md`.
 
 ## Operating Constraints
 
-**STRICTLY READ-ONLY**: Do **not** modify any files. Output a structured analysis report. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
+**REPORT-ONLY**: Do not modify `spec.md`, `plan.md`, `tasks.md`, the constitution, or any other project artifact. Write or replace only `FEATURE_DIR/spec-analysis.md`. Offer an optional remediation plan (user must explicitly approve before any follow-up editing commands would be invoked manually).
 
 **Constitution Authority**: The project constitution (`.specify/memory/constitution.md`) is **non-negotiable** within this analysis scope. Constitution conflicts are automatically CRITICAL and require adjustment of the spec, plan, or tasks—not dilution, reinterpretation, or silent ignoring of the principle. If a principle itself needs to change, that must occur in a separate, explicit constitution update outside `/speckit-analyze`.
 
@@ -71,6 +71,7 @@ Run `.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --inclu
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
 - TASKS = FEATURE_DIR/tasks.md
+- REPORT = FEATURE_DIR/spec-analysis.md
 
 Abort with an error message if any required file is missing (instruct the user to run missing prerequisite command).
 For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
@@ -162,11 +163,16 @@ Use this heuristic to prioritize findings:
 - **MEDIUM**: Terminology drift, missing non-functional task coverage, underspecified edge case
 - **LOW**: Style/wording improvements, minor redundancy not affecting execution order
 
-### 6. Produce Compact Analysis Report
+### 6. Write Compact Analysis Report
 
-Output a Markdown report (no file writes) with the following structure:
+Write `REPORT` as Markdown with the following structure:
 
-## Specification Analysis Report
+```markdown
+# Specification Analysis Report
+
+**Spec Directory**: [relative path to FEATURE_DIR]
+**Generated**: YYYY-MM-DD
+**Findings**: [total]
 
 | ID | Category | Severity | Location(s) | Summary | Recommendation |
 |----|----------|----------|-------------|---------|----------------|
@@ -191,10 +197,13 @@ Output a Markdown report (no file writes) with the following structure:
 - Ambiguity Count
 - Duplication Count
 - Critical Issues Count
+```
+
+If no issues are found, still create the report with `Findings: 0`, an empty-state message in place of finding rows, complete coverage and metrics sections, and next actions that indicate readiness for `/speckit-implement`.
 
 ### 7. Provide Next Actions
 
-At end of report, output a concise Next Actions block:
+At the end of `REPORT`, write a concise Next Actions block:
 
 - If CRITICAL issues exist: Recommend resolving before `/speckit-implement`
 - If only LOW/MEDIUM: User may proceed, but provide improvement suggestions
@@ -202,11 +211,21 @@ At end of report, output a concise Next Actions block:
 
 ### 8. Offer Remediation
 
-Ask the user: "Would you like me to suggest concrete remediation edits for the top N issues?" (Do NOT apply them automatically.)
+After writing the report, ask the user: "Would you like me to suggest concrete remediation edits for the top N issues?" (Do NOT apply them automatically.)
 
-### 9. Check for extension hooks
+### 9. Validate the Report
 
-After reporting, check if `.specify/extensions.yml` exists in the project root.
+Before completion, verify:
+
+- `REPORT` exists and all required sections are present.
+- Finding IDs are unique and stable, and every finding includes category, severity, location, summary, and recommendation.
+- Finding and metric counts agree throughout the report.
+- Coverage entries account for every requirement included in the requirements inventory.
+- `spec.md`, `plan.md`, `tasks.md`, the constitution, and all other project artifacts remain unchanged.
+
+### 10. Check for extension hooks
+
+After writing and validating `REPORT`, check if `.specify/extensions.yml` exists in the project root.
 - If it exists, read it and look for entries under the `hooks.after_analyze` key
 - If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
 - Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
@@ -248,11 +267,30 @@ After reporting, check if `.specify/extensions.yml` exists in the project root.
 
 ### Analysis Guidelines
 
-- **NEVER modify files** (this is read-only analysis)
+- **ONLY write `FEATURE_DIR/spec-analysis.md`** (all analyzed artifacts remain read-only)
 - **NEVER hallucinate missing sections** (if absent, report them accurately)
 - **Prioritize constitution violations** (these are always CRITICAL)
 - **Use examples over exhaustive rules** (cite specific instances, not generic patterns)
 - **Report zero issues gracefully** (emit success report with coverage statistics)
+
+## Completion Report
+
+After extension hooks are dispatched or skipped, report:
+
+- Path to `spec-analysis.md`.
+- Total findings and severity counts.
+- Coverage percentage and any unmapped task count.
+- Whether any implementation-blocking findings remain.
+- Confirmation that no artifact other than `spec-analysis.md` was modified.
+- Suggested next command.
+
+## Done When
+
+- [ ] `FEATURE_DIR/spec-analysis.md` created and validated
+- [ ] All required artifacts analyzed and represented in coverage metrics
+- [ ] Source artifacts and constitution left unchanged
+- [ ] Extension hooks dispatched or skipped according to the rules above
+- [ ] Completion reported with report path, counts, blocking status, and next command
 
 ## Context
 
