@@ -224,8 +224,12 @@ until the user provides a decision.
 ### 5. Update the Review Report
 
 Update the original report in place after remediation. Preserve its findings,
-recommendations, and existing structure. Add or refresh a `Model Council
-Disposition` section containing:
+recommendations, and existing structure, including the `Council Review
+Recommendations` and `Needs Human Review` synthesis sections from step 3. Keep
+those synthesis sections in sync with the post-remediation state—update or remove
+stale rows rather than dropping the sections—while satisfying the idempotency
+requirement below. Add or refresh a `Model Council Disposition` section
+containing:
 
 | Finding ID | Disposition | Council Resolution | Artifact Evidence | Notes |
 |------------|-------------|--------------------|-------------------|-------|
