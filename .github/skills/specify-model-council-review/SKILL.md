@@ -1,6 +1,6 @@
 ---
 name: "specify-model-council-review"
-description: "Review a specification report with a three-model specialist council, route unanimous remediations to the appropriate speckit skill, record dispositions, and escalate only disagreements."
+description: "Review a specification report with a three-model specialist council, synthesize its recommendations, route unanimous remediations to the appropriate speckit skill, and escalate only disagreements or material risks."
 compatibility: "Requires task-agent model selection and a spec-kit project with the speckit-specify, speckit-plan, and speckit-tasks skills"
 metadata:
   author: "timothymeyers"
@@ -37,9 +37,11 @@ requested specialist; do not silently substitute another specialist.
 ## Goal
 
 Obtain three independent specialist reviews of every finding and recommendation
-in the target report. Automatically remediate outcomes on which all three
-members agree, record every disposition in the report, and ask the user only
-about outcomes where the council disagrees and a product decision is required.
+in the target report. Synthesize the completed council's findings into explicit
+recommendations and narrowly scoped human-review items. Automatically remediate
+low-risk outcomes on which all three members agree, record every disposition in
+the report, and ask the user only about substantive disagreements or material
+risks that require a human decision.
 
 ## Operating Constraints
 
@@ -55,6 +57,12 @@ about outcomes where the council disagrees and a product decision is required.
 - Treat unanimity as consensus. A 2–1 result is disagreement, not consensus.
 - The coordinating agent MUST NOT cast a fourth vote or silently resolve a
   disagreement.
+- Minimize human escalation. Do not escalate minor wording differences,
+  implementation details already constrained by the specification, or a
+  finding's severity label by itself. Treat an outcome as materially high risk
+  only when applying it could affect security, privacy, compliance, irreversible
+  data handling, or a cross-cutting architectural or product commitment that
+  the reviewed artifacts do not already authorize.
 - Apply changes only through the skill that owns the affected artifact:
   - use `/speckit-specify` for `spec.md`;
   - use `/speckit-plan` for `plan.md`, `research.md`, `data-model.md`, `quickstart.md`, and `contracts/`;
@@ -136,9 +144,10 @@ Wait for all three tasks to complete. If a task fails, retry that same
 specialist/model once. If it still fails, stop and report the failed council
 seat; do not infer consensus from fewer than three reviews.
 
-### 3. Determine Consensus
+### 3. Synthesize the Council Review
 
-For each finding, compare the three results:
+After all three council reviews are complete, compare their results for every
+finding and synthesize one coordinator-owned disposition:
 
 - **Consensus — apply**: All members mark the finding `VALID` and agree on a
   materially equivalent resolution. Minor wording differences do not break
@@ -148,13 +157,45 @@ For each finding, compare the three results:
 - **Disagreement — decision required**: Verdicts differ, resolutions have
   materially different product outcomes, or any member marks
   `Decision needed: YES`.
+- **High risk — human review required**: The council agrees on an outcome, but
+  applying it meets the material high-risk definition in the operating
+  constraints.
 
 When equivalence is uncertain, classify the result as disagreement. Do not use
 severity or majority vote to override this rule.
 
+Immediately add or refresh these sections in the original report:
+
+#### Council Review Recommendations
+
+Record every low-risk unanimous disposition, including both changes to apply and
+decisions that no change is warranted:
+
+| Finding ID | Recommendation | Council Resolution | Shared Rationale |
+|------------|----------------|--------------------|------------------|
+
+Use `APPLY` or `NO_CHANGE` for `Recommendation`. Consolidate materially
+equivalent wording into a concise resolution without introducing a fourth
+opinion.
+
+#### Needs Human Review
+
+Record only substantive disagreements and materially high-risk outcomes:
+
+| Finding ID | Escalation Reason | Council-Supported Options | Decision Needed |
+|------------|-------------------|---------------------------|-----------------|
+
+State whether the reason is `DISAGREEMENT` or `HIGH_RISK`, summarize the
+distinct supported options and implications neutrally, and identify the
+specific human decision. Do not duplicate a finding across both sections.
+
+Make both sections idempotent: replace prior synthesis rows for the same finding
+and remove stale rows when its classification changes. Preserve the rest of the
+report. The synthesis MUST be written before any remediation begins.
+
 ### 4. Apply Unanimous Remediations
 
-If one or more findings have **Consensus — apply**:
+If one or more findings have low-risk **Consensus — apply**:
 
 1. Group findings by owning skill and create one consolidated remediation
    request per skill. Each request must contain every applicable finding ID, the
@@ -177,7 +218,8 @@ If one or more findings have **Consensus — apply**:
    `REMEDIATION_FAILED`; surface the failure rather than claiming completion.
 
 Do not invoke a remediation skill when no agreed changes target artifacts owned
-by that skill.
+by that skill. Do not remediate findings listed under `Needs Human Review`
+until the user provides a decision.
 
 ### 5. Update the Review Report
 
@@ -192,13 +234,14 @@ Use these dispositions:
 
 - `APPLIED` — unanimous resolution was verified in its target artifact;
 - `NO_CHANGE` — unanimous decision that no artifact change is warranted;
-- `USER_DECISION_REQUIRED` — council disagreement requires user input;
+- `HUMAN_REVIEW_REQUIRED` — council disagreement or material risk requires
+  human input;
 - `REMEDIATION_FAILED` — an agreed change could not be verified.
 
 For `APPLIED`, cite the updated artifact path, heading, and stable identifiers
 when present. For `NO_CHANGE`, record a concise shared rationale. For
-disagreements, summarize the distinct options without identifying hidden
-reasoning or presenting a coordinator preference.
+`HUMAN_REVIEW_REQUIRED`, summarize the escalation reason and distinct options
+without identifying hidden reasoning or presenting a coordinator preference.
 
 Make the update idempotent: replace the prior council disposition for the same
 finding rather than appending duplicate rows. Recalculate any report metadata
@@ -208,24 +251,28 @@ that explicitly tracks open, resolved, or disposition counts.
 
 - If every finding is `APPLIED` or `NO_CHANGE`, report completion concisely with
   the updated artifact and report paths. Do not ask for confirmation.
-- If disagreements exist, surface only those findings. For each, show:
+- If human-review items exist, surface only those findings. For each, show:
   - finding ID and the decision required;
   - the distinct council-supported options and their implications;
+  - whether escalation is due to disagreement or material risk;
   - a neutral prompt for the user's choice.
 - Also surface any `REMEDIATION_FAILED` findings with the verification failure.
 - Do not include unanimous findings, routine progress, or full council reviews
   in the decision request.
 
-After the user resolves disagreements, apply each selected resolution through
-the skill that owns its affected artifact, verify the artifact, update the
-corresponding report dispositions to `APPLIED` or `NO_CHANGE`, and report
-completion.
+After the user resolves human-review items, apply each selected resolution
+through the skill that owns its affected artifact, verify the artifact, remove
+the finding from `Needs Human Review`, add its resolved outcome to `Council
+Review Recommendations`, update the corresponding report disposition to
+`APPLIED` or `NO_CHANGE`, and report completion.
 
 ## Done When
 
 - [ ] Three independent reviews completed with the required specialist and models
 - [ ] Every source finding has a unanimous or disagreement classification
+- [ ] `Council Review Recommendations` contains every low-risk unanimous disposition
+- [ ] `Needs Human Review` contains only substantive disagreements and material risks
 - [ ] Every unanimous remediation was applied through its artifact-owning skill
 - [ ] All changed artifacts were verified
 - [ ] The source report contains one current disposition per finding
-- [ ] Only disagreements or remediation failures were surfaced to the user
+- [ ] Only human-review items or remediation failures were surfaced to the user
