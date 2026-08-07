@@ -198,8 +198,10 @@ Reviews a Spec Kit report (`clarify-report.md`, `spec-analysis.md`, …) with a
 council of three independent specialist reviewers, then acts on the result.
 
 - Launches three read-only reviewers in parallel using one specialist agent type
-  (default `csa`) and exactly the models `gpt-5.6-sol`, `claude-opus-4.8`, and
-  `claude-opus-4.7`
+  (default `csa`), each pinned to a different model. The exact model list is
+  pinned in
+  [`.github/skills/specify-model-council-review/SKILL.md`](.github/skills/specify-model-council-review/SKILL.md)
+  and is the source of truth — update it there, not here, as models change
 - Council members get identical inputs, may not edit files, may not invoke
   remediation skills, and may not talk to one another
 - **Unanimity is consensus**; a 2–1 split is a disagreement. The coordinator does
